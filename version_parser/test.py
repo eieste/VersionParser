@@ -1,4 +1,4 @@
-from .version import Version, VersionType
+from version_parser.version import Version
 
 import unittest
 
