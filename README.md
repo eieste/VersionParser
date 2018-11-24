@@ -1,5 +1,8 @@
 # Version Parser
 
+[![Build Status](https://travis-ci.org/eieste/VersionParser.svg?branch=master)](https://travis-ci.org/eieste/VersionParser)
+[![PyPI version](https://badge.fury.io/py/version-parser.svg)](https://badge.fury.io/py/version-parser)
+
 Der VersionParser kann Versionsnummer parsen und compare welche im format
 Major-Version, Minor-Version und Build-Version aufgebaut sind.
 
