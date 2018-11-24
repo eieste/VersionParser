@@ -1,0 +1,16 @@
+language: python
+python:
+  - "3.6"
+install:
+  - python setup.py install
+script:
+  - python test.py
+
+
+
+deploy:
+  provider: pypi
+  user: $username
+  password: $password
+  on:
+    branch: master
