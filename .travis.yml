@@ -4,7 +4,7 @@ python:
 install:
   - python setup.py install
 script:
-  - python test.py
+  - python version_parser/test.py
 
 
 
