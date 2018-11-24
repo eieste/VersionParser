@@ -19,7 +19,7 @@ Mögliche Eingabe Typen sind:
 
 
 ```python
-from version import Version
+from version_parser.version import Version
 
 >> Version("v2.3.4")
 
@@ -29,7 +29,7 @@ from version import Version
 
 
 >> v = Version("v2.3.4")
->> v.get_representative_number()
+>> v.get_number()
 2003004
 >> v.get_major_version()
 2

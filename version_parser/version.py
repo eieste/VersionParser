@@ -1,5 +1,5 @@
 """
-Der VersionParser kann Versionsnummer parsen und compare welche im format
+Der version_parser kann Versionsnummer parsen und compare welche im format
 Major-Version, Minor-Version und Build-Version aufgebaut sind.
 
 Mögliche Eingabe Typen sind:
@@ -50,29 +50,29 @@ class Version:
 
     def __lt__(self, other):
         assert isinstance(other, self.__class__)
-        return self.get_representative_number() < other.get_representative_number()
+        return self.get_number() < other.get_number()
 
     def __le__(self, other):
         assert isinstance(other, self.__class__)
-        return self.get_representative_number() <= other.get_representative_number()
+        return self.get_number() <= other.get_number()
 
     def __eq__(self, other):
         assert isinstance(other, self.__class__)
-        return self.get_representative_number() == other.get_representative_number()
+        return self.get_number() == other.get_number()
 
     def __ge__(self, other):
         assert isinstance(other, self.__class__)
-        return self.get_representative_number() >= other.get_representative_number()
+        return self.get_number() >= other.get_number()
 
     def __gt__(self, other):
         assert isinstance(other, self.__class__)
-        return self.get_representative_number() > other.get_representative_number()
+        return self.get_number() > other.get_number()
 
     def __ne__(self, other):
         assert isinstance(other, self.__class__)
-        return self.get_representative_number() != other.get_representative_number()
+        return self.get_number() != other.get_number()
 
-    def get_representative_number(self):
+    def get_number(self):
         filled_major = str(self._major_version).rjust(3, "0")
         filled_minor = str(self._minor_version).rjust(3, "0")
         filled_build = str(self._build_version).rjust(3, "0")
@@ -135,30 +135,6 @@ class Version:
 
     def get_build_version(self):
         return self._build_version
-
-    # def same_version_as(self, other_version):
-    #     """
-    #     Check if versions are the same (Check also the build version)
-    #     Args:
-    #         other_version: Any version String. Supportet VM999m999b999, v_999_999_99 v999.999.999
-    #     Returns: (bool)
-    #
-    #     """
-    #     if isinstance(other_version, Version):
-    #         result = {
-    #             "major": other_version.get_major_version(),
-    #             "minor": other_version.get_minor_version(),
-    #             "build": other_version.get_build_version()
-    #         }
-    #     else:
-    #         result = self._parse(other_version)
-    #
-    #     if result["major"] == self._major_version and result["minor"] == self._minor_version and result[
-    #         "build"] == self._build_version:
-    #         return True
-    #     else:
-    #         return False
-    #
 
     def compatible_version_with(self, other_version):
         """
