@@ -48,7 +48,7 @@ class TestVersion(unittest.TestCase):
     def test_fails(self):
         self.assertRaises(TypeError, Version)
         self.assertRaises(ValueError, Version, "asdf0.1.2")
-        self.assertEqual(ValueError, Version, "VM1m2n3")
+        self.assertRaises(ValueError, Version, "VM1m2n3")
         self.assertRaises(ValueError, Version, "12345678901234")
         self.assertRaises(ValueError, Version, "p.y.p")
         self.assertRaises(ValueError, Version("v1.2.3").compatible_version_with, "asdf0.1.2")
