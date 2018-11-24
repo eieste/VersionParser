@@ -5,9 +5,9 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="version_parser",
-    version="0.0.2",
+    version="0.1.0",
     author="Stefan Eiermann",
-    author_email="pypip@ultraapp.de",
+    author_email="python-org@ultraapp.de",
     description="This package can parse and compare semantic versioning.",
     long_description=long_description,
     long_description_content_type="text/markdown",

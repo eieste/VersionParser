@@ -1,23 +1,3 @@
-"""
-Der version_parser kann Versionsnummer parsen und compare welche im format
-Major-Version, Minor-Version und Build-Version aufgebaut sind.
-
-Mögliche Eingabe Typen sind:
-    v1.2.3
-    V1.2.3
-    v_1_2_3
-    V_1_2_3
-    1_2_3
-    v1_2_3
-    V1_2_3
-    VM1m2b3
-    VM1m2p3
-    vM1m2b3
-    vM1m2p3
-    1.2.3
-
-"""
-
 import re
 from enum import Enum
 
@@ -27,13 +7,17 @@ class VersionType(Enum):
     CLASSNAME = 2
     VERSION = 3
     STRIPPED_VERSION = 4
+    NUMBER = 5
+    CLASSNAME_PATCH = 6
+    CLASSNAME_BUILD = 7
 
 
 class Version:
-    filename_pattern = re.compile(r"^[v|V]?[\_]?([0-9]+)\_([0-9]+)\_([0-9]+)$")
-    class_pattern = re.compile(r"^[v|V]?M([0-9]+)m([0-9]+)[b|p]([0-9]+)$")
-    version_pattern = re.compile(r"^[v|V]([0-9]+)\.([0-9]+)\.([0-9]+)$")
-    stripped_version_pattern = re.compile(r"^([0-9]+)\.([0-9]+)\.([0-9]+)$")
+    filename_pattern = re.compile(r"^[v|V]?[\_]?(?P<major>[0-9]+)\_(?P<minor>[0-9]+)\_(?P<build>[0-9]+)$")
+    class_pattern = re.compile(r"^[v|V]?M(?P<major>[0-9]+)m(?P<minor>[0-9]+)(?P<type>[p|b])(?P<build>[0-9]+)$")
+    version_pattern = re.compile(r"^[v|V](?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<build>[0-9]+)$")
+    stripped_version_pattern = re.compile(r"^(?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<build>[0-9]+)$")
+    number_version_pattern = re.compile(r"^(\d{1,9})$")
 
     def __init__(self, raw_version):
         result = self._parse(raw_version)
@@ -82,7 +66,7 @@ class Version:
         if type is VersionType.FILENAME:
             return "v_{}_{}_{}".format(self._major_version, self._minor_version, self._build_version)
 
-        if type is VersionType.CLASSNAME:
+        if type in [VersionType.CLASSNAME, VersionType.CLASSNAME_BUILD]:
             return "VM{}m{}b{}".format(self._major_version, self._minor_version, self._build_version)
 
         if type is VersionType.VERSION:
@@ -91,36 +75,72 @@ class Version:
         if type is VersionType.STRIPPED_VERSION:
             return "{}.{}.{}".format(self._major_version, self._minor_version, self._build_version)
 
-    def _parse(self, other_version):
+        if type is VersionType.NUMBER:
+            return self.get_number()
+
+        if type is VersionType.CLASSNAME_PATCH:
+            return "VM{}m{}p{}".format(self._major_version, self._minor_version, self._build_version)
+
+    def _reverse(self, num):
+        return str(num)[::-1]
+
+    def _parse(self, any_version):
         result_dict = {
             "type": ValueError("Could not parse type"),
             "major": ValueError("Could not parse major"),
             "minor": ValueError("Could not parse minor"),
             "build": ValueError("Could not parse build")
         }
+
+        str_version = str(any_version)
         result = False
-        if self.filename_pattern.match(other_version):
-            result = self.filename_pattern.match(other_version)
+        if self.filename_pattern.match(str_version):
+            result = self.filename_pattern.match(str_version)
             result_dict["type"] = VersionType.FILENAME
 
-        if self.class_pattern.match(other_version):
-            result = self.class_pattern.match(other_version)
+        if self.class_pattern.match(str_version):
+            result = self.class_pattern.match(str_version)
             result_dict["type"] = VersionType.CLASSNAME
+            if result.group("type") == "p":
+                result_dict["type"] = VersionType.CLASSNAME_PATCH
+            elif result.group("type") == "b":
+                result_dict["type"] = VersionType.CLASSNAME_BUILD
 
-        if self.version_pattern.match(other_version):
-            result = self.version_pattern.match(other_version)
+        elif self.version_pattern.match(str_version):
+            result = self.version_pattern.match(str_version)
             result_dict["type"] = VersionType.VERSION
 
-        if self.stripped_version_pattern.match(other_version):
-            result = self.stripped_version_pattern.match(other_version)
+        elif self.stripped_version_pattern.match(str_version):
+            result = self.stripped_version_pattern.match(str_version)
             result_dict["type"] = VersionType.STRIPPED_VERSION
 
-        if not result:
-            raise ValueError("Could not parse {}".format(other_version))
+        elif self.number_version_pattern.match(str_version):
+            result = self.number_version_pattern.match(str_version)
+            result_dict["type"] = VersionType.NUMBER
 
-        result_dict["major"] = result.group(1)
-        result_dict["minor"] = result.group(2)
-        result_dict["build"] = result.group(3)
+            reversed_nr = self._reverse(result.group(1))
+            version_pices = [reversed_nr[i:i + 3] for i in range(0, len(reversed_nr), 3)]
+
+            result_dict["build"] = int(self._reverse(version_pices[0]))
+
+            if len(version_pices) > 1:
+                result_dict["minor"] = int(self._reverse(version_pices[1]))
+            else:
+                result_dict["minor"] = 0
+
+            if len(version_pices) > 2:
+                result_dict["major"] = int(self._reverse(version_pices[2]))
+            else:
+                result_dict["major"] = 0
+
+            return result_dict
+
+        if not result:
+            raise ValueError("Could not parse {}".format(str_version))
+
+        result_dict["major"] = result.group("major")
+        result_dict["minor"] = result.group("minor")
+        result_dict["build"] = result.group("build")
 
         return result_dict
 
@@ -134,6 +154,9 @@ class Version:
         return self._major_version
 
     def get_build_version(self):
+        return self._build_version
+
+    def get_patch_version(self):
         return self._build_version
 
     def compatible_version_with(self, other_version):
