@@ -138,9 +138,9 @@ class Version:
         if not result:
             raise ValueError("Could not parse {}".format(str_version))
 
-        result_dict["major"] = result.group("major")
-        result_dict["minor"] = result.group("minor")
-        result_dict["build"] = result.group("build")
+        result_dict["major"] = int(result.group("major"))
+        result_dict["minor"] = int(result.group("minor"))
+        result_dict["build"] = int(result.group("build"))
 
         return result_dict
 
