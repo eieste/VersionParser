@@ -1,5 +1,13 @@
 # Version Parser
 
+## JavaScript Version
+
+[https://www.npmjs.com/package/version-parser](https://www.npmjs.com/package/version-parser)
+
+[![npm version](https://badge.fury.io/js/version-parser.svg)](https://badge.fury.io/js/version-parser)
+
+## Python Version
+
 [![Build Status](https://travis-ci.org/eieste/VersionParser.svg?branch=master)](https://travis-ci.org/eieste/VersionParser)
 [![PyPI version](https://badge.fury.io/py/version-parser.svg)](https://badge.fury.io/py/version-parser)
 
