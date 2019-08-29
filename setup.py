@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="version_parser",
-    version="0.1.1",
+    version="1.0.0",
     author="Stefan Eiermann",
     author_email="python-org@ultraapp.de",
     description="This package can parse and compare semantic versioning.",
@@ -21,7 +21,7 @@ setuptools.setup(
         "Topic :: Utilities",
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: JavaScript",
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable"
     ],
 )
 
