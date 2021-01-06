@@ -1,6 +1,6 @@
-from version_parser.version import Version, VersionType
-
 import unittest
+
+from version_parser.version import Version, VersionType
 
 
 class TestVersion(unittest.TestCase):
