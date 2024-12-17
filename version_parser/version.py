@@ -97,6 +97,7 @@ class Version:
         return (self._major_version, self._minor_version, self._build_version)
 
     def get_number(self):
+        # Legacy Number support
         filled_major = str(self._major_version).rjust(3, "0")
         filled_minor = str(self._minor_version).rjust(3, "0")
         filled_build = str(self._build_version).rjust(3, "0")
@@ -116,23 +117,14 @@ class Version:
             return f"{self._major_version}.{self._minor_version}.{self._build_version}"
 
         if type is VersionType.NUMBER:
-            # If needed, return the number as before:
-            return self._legacy_number_format()
+            # _legacy_number_format: If needed, return the number as before:
+            return self.get_number() 
 
         if type is VersionType.CLASSNAME_PATCH:
             return f"VM{self._major_version}m{self._minor_version}p{self._build_version}"
 
         #// If we can't determine type, fall back to a standard version string
         return f"v{self._major_version}.{self._minor_version}.{self._build_version}"
-
-    def _legacy_number_format(self):
-        """
-        Recreate the legacy number format (zero-padded to 3 digits each).
-        """
-        filled_major = str(self._major_version).rjust(3, "0")
-        filled_minor = str(self._minor_version).rjust(3, "0")
-        filled_build = str(self._build_version).rjust(3, "0")
-        return int(f"{filled_major}{filled_minor}{filled_build}")
 
     def _parse(self, any_version):
         result_dict = {
