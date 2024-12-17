@@ -100,30 +100,30 @@ class Version:
         filled_major = str(self._major_version).rjust(3, "0")
         filled_minor = str(self._minor_version).rjust(3, "0")
         filled_build = str(self._build_version).rjust(3, "0")
-        return int("{}{}{}".format(filled_major, filled_minor, filled_build))
+        return int(f"{filled_major}{filled_minor}{filled_build}")
 
     def get_typed_version(self, type):
         if type is VersionType.FILENAME:
-            return "v_{}_{}_{}".format(self._major_version, self._minor_version, self._build_version)
+            return f"v_{self._major_version}_{self._minor_version}_{self._build_version}"
 
         if type in [VersionType.CLASSNAME, VersionType.CLASSNAME_BUILD]:
-            return "VM{}m{}b{}".format(self._major_version, self._minor_version, self._build_version)
+            return f"VM{self._major_version}m{self._minor_version}b{self._build_version}"
 
         if type is VersionType.VERSION:
-            return "v{}.{}.{}".format(self._major_version, self._minor_version, self._build_version)
+            return f"v{self._major_version}.{self._minor_version}.{self._build_version}"
 
         if type is VersionType.STRIPPED_VERSION:
-            return "{}.{}.{}".format(self._major_version, self._minor_version, self._build_version)
+            return f"{self._major_version}.{self._minor_version}.{self._build_version}"
 
         if type is VersionType.NUMBER:
             # If needed, return the number as before:
             return self._legacy_number_format()
 
         if type is VersionType.CLASSNAME_PATCH:
-            return "VM{}m{}p{}".format(self._major_version, self._minor_version, self._build_version)
+            return f"VM{self._major_version}m{self._minor_version}p{self._build_version}"
 
         #// If we can't determine type, fall back to a standard version string
-        return "v{}.{}.{}".format(self._major_version, self._minor_version, self._build_version)
+        return f"v{self._major_version}.{self._minor_version}.{self._build_version}"
 
     def _legacy_number_format(self):
         """
@@ -132,7 +132,7 @@ class Version:
         filled_major = str(self._major_version).rjust(3, "0")
         filled_minor = str(self._minor_version).rjust(3, "0")
         filled_build = str(self._build_version).rjust(3, "0")
-        return int("{}{}{}".format(filled_major, filled_minor, filled_build))
+        return int(f"{filled_major}{filled_minor}{filled_build}")
 
     def _parse(self, any_version):
         result_dict = {
@@ -167,7 +167,7 @@ class Version:
             result_dict["type"] = VersionType.STRIPPED_VERSION
 
         if not result:
-            raise ValueError("Could not parse {}".format(str_version))
+            raise ValueError(f"Could not parse {str_version}")
 
         result_dict["major"] = int(result.group("major")) if result.group("major") else 0
         result_dict["minor"] = int(result.group("minor")) if result.group("minor") else 0
